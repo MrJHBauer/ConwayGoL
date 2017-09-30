@@ -1,7 +1,10 @@
-#include <iostream>
+#include "../Header Files/World.h"
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    auto* world = new World(500, 500);
+
+    world->Run();
+
     return 0;
 }
