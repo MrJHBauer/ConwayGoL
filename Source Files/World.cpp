@@ -16,7 +16,7 @@ void World::Init()
     CurrentGeneration = new Cell*[Height / Scale];
     for(auto row = 0; row < Height / Scale; row++)
     {
-        CurrentGeneration[row] =  new Cell[Width / Scale];
+        CurrentGeneration[row] = new Cell[Width / Scale];
     }
     State = WorldState::PAUSED;
 }
@@ -26,6 +26,63 @@ void World::Tick()
 {
     if(State == WorldState::PAUSED) return;
     sf::sleep(TickRate);
+    auto** nextGeneration = new Cell*[Height / Scale];
+    for(auto row = 0; row < Height / Scale; row++)
+    {
+        nextGeneration[row] = new Cell[Width / Scale];
+    }
+    for(auto row = 0; row < Height / Scale; row++)
+    {
+        for(auto col = 0; col < Width / Scale; col++)
+        {
+            int neighbourCount = 0;
+            for(auto i = -1; i <= 1; i++)
+            {
+                for(auto j = -1; j <= 1; j++)
+                {
+                    int neighbourRow = row + i;
+                    int neighbourCol = col + j;
+                    if(IsCellValid(neighbourRow, neighbourCol) && (i != 0 || j != 0))
+                    {
+                        if(CurrentGeneration[neighbourRow][neighbourCol].GetState() == CellState::ALIVE)
+                        {
+                            neighbourCount++;
+                        }
+                    }
+                }
+            }
+            if(CurrentGeneration[row][col].GetState() == CellState::ALIVE)
+            {
+                if(neighbourCount < 2 || neighbourCount > 3)
+                {
+                    nextGeneration[row][col].SetState(CellState::DEAD);
+                }
+                else
+                {
+                    nextGeneration[row][col].SetState(CellState::ALIVE);
+                }
+            }
+            else if(CurrentGeneration[row][col].GetState() == CellState::DEAD)
+            {
+                if(neighbourCount == 3)
+                {
+                    nextGeneration[row][col].SetState(CellState::ALIVE);
+                }
+                else
+                {
+                    nextGeneration[row][col].SetState(CellState::DEAD);
+                }
+            }
+        }
+    }
+    for(auto row = 0; row < Height / Scale; row++)
+    {
+        for(auto col = 0; col < Width / Scale; col++)
+        {
+            CurrentGeneration[row][col].SetState(nextGeneration[row][col].GetState());
+        }
+    }
+    delete nextGeneration;
 }
 
 void World::HandleInput()
