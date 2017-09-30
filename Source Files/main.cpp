@@ -2,7 +2,7 @@
 
 int main()
 {
-    auto* world = new World(512, 512, 32);
+    auto* world = new World(512, 512, 32, sf::milliseconds(500));
 
     world->Run();
 

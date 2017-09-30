@@ -1,10 +1,12 @@
+#include <iostream>
 #include "../Header Files/World.h"
 
-World::World(int Width, int Height, int Scale)
+World::World(int Width, int Height, int Scale, sf::Time TickRate)
 {
     this->Width = Width;
     this->Height = Height;
     this->Scale = Scale;
+    this->TickRate = TickRate;
 }
 
 void World::Init()
@@ -16,11 +18,14 @@ void World::Init()
     {
         CurrentGeneration[row] =  new Cell[Width / Scale];
     }
-    CurrentGeneration[0][0].SetState(CellState::ALIVE);
-    CurrentGeneration[(Height / Scale) - 1][0].SetState(CellState::ALIVE);
-    CurrentGeneration[(Height / Scale) - 1][(Width / Scale) - 1].SetState(CellState::ALIVE);
-    CurrentGeneration[0][(Width / Scale) - 1].SetState(CellState::ALIVE);
+    State = WorldState::PAUSED;
+}
 
+
+void World::Tick()
+{
+    if(State == WorldState::PAUSED) return;
+    sf::sleep(TickRate);
 }
 
 void World::Draw()
@@ -60,10 +65,16 @@ void World::Run()
                 {
                     Window->close();
                 }
+                else if(event.key.code == sf::Keyboard::Space)
+                {
+                    State = State == WorldState::PAUSED ? WorldState::RUNNING : WorldState::PAUSED;
+                }
             }
         }
 
         Window->clear(sf::Color::White);
+
+        Tick();
 
         Draw();
 
