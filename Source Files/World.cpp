@@ -1,4 +1,3 @@
-#include <iostream>
 #include "../Header Files/World.h"
 
 World::World(int Width, int Height, int Scale, sf::Time TickRate)
