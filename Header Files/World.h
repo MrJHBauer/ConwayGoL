@@ -2,6 +2,7 @@
 #define CONWAYGOL_WORLD_H
 
 #include <SFML/Graphics.hpp>
+#include "Cell.h"
 
 /**
  * World class is responsible for containing the simulation environment for the
@@ -13,11 +14,13 @@ class World
     sf::RenderWindow* Window;
     int Width;
     int Height;
+    int Scale;
+    Cell** CurrentGeneration;
     void Init();
     void Draw();
 
 public:
-    World(int Width, int Height);
+    World(int Width, int Height, int Scale);
     void Run();
 };
 

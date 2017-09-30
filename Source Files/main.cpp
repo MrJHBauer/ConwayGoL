@@ -2,7 +2,7 @@
 
 int main()
 {
-    auto* world = new World(500, 500);
+    auto* world = new World(512, 512, 32);
 
     world->Run();
 
