@@ -30,7 +30,9 @@ class World
     Cell** CurrentGeneration;
     void Init();
     void Tick();
+    void HandleInput();
     void Draw();
+    bool IsCellValid(int Row, int Col);
 
 public:
     World(int Width, int Height, int Scale, sf::Time TickRate);

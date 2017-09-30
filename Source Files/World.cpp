@@ -28,6 +28,27 @@ void World::Tick()
     sf::sleep(TickRate);
 }
 
+void World::HandleInput()
+{
+    if(State == WorldState::RUNNING) return;
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Mouse::isButtonPressed(sf::Mouse::Right))
+    {
+        int row = (int) sf::Mouse::getPosition(*Window).y / Scale;
+        int col = (int) sf::Mouse::getPosition(*Window).x / Scale;
+        if(IsCellValid(row, col))
+        {
+            if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                CurrentGeneration[row][col].SetState(CellState::ALIVE);
+            }
+            else
+            {
+                CurrentGeneration[row][col].SetState(CellState::DEAD);
+            }
+        }
+    }
+}
+
 void World::Draw()
 {
     sf::RectangleShape rectangle(sf::Vector2f(Scale, Scale));
@@ -44,6 +65,11 @@ void World::Draw()
             Window->draw(rectangle);
         }
     }
+}
+
+bool World::IsCellValid(int Row, int Col)
+{
+    return (Row >= 0 && Row < Height / Scale) && (Col >= 0 && Col < Width / Scale);
 }
 
 void World::Run()
@@ -75,6 +101,8 @@ void World::Run()
         Window->clear(sf::Color::White);
 
         Tick();
+
+        HandleInput();
 
         Draw();
 
