@@ -81,7 +81,11 @@ void World::Tick()
             CurrentGeneration[row][col].SetState(nextGeneration[row][col].GetState());
         }
     }
-    delete nextGeneration;
+	for(auto row = 0; row < Height / Scale; row++)
+	{
+		delete nextGeneration[row];
+	}
+	delete nextGeneration;
 }
 
 void World::HandleInput()
